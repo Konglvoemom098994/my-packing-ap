@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#060608">
+<title>PACKING PRO</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ─────────────────────────────────────────
+   DESIGN TOKENS
+───────────────────────────────────────── */
+:root{
+  /* night */
+  --bg0:#060608;
+  --bg1:#0d0d12;
+  --bg2:#13131a;
+  --bg3:#1c1c26;
+  --bg4:#252533;
+  --glass:rgba(255,255,255,.04);
+  --glass2:rgba(255,255,255,.07);
+  --glass3:rgba(255,255,255,.11);
+  --border:rgba(255,255,255,.07);
+  --border2:rgba(255,255,255,.13);
+  --border3:rgba(255,255,255,.22);
+  --accent:#00e5ff;
+  --accent-dim:rgba(0,229,255,.15);
+  --accent-glow:rgba(0,229,255,.35);
+  --accent-fg:#000d10;
+  --accent2:#ff6b6b;
+  --accent3:#69ff47;
+  --text:#e8eaf6;
+  --text2:#8890b0;
+  --text3:#44485e;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Noto Sans Thai',sans-serif;
+  --r:16px; --rs:10px; --rx:50px;
+}
+body.day{
+  --bg0:#eef0f8;
+  --bg1:#f4f5fc;
+  --bg2:#ffffff;
+  --bg3:#eceef8;
+  --bg4:#e0e3f2;
+  --glass:rgba(255,255,255,.7);
+  --glass2:rgba(255,255,255,.85);
+  --glass3:rgba(255,255,255,.95);
+  --border:rgba(100,110,180,.1);
+  --border2:rgba(100,110,180,.18);
+  --border3:rgba(100,110,180,.3);
+  --accent:#0052cc;
+  --accent-dim:rgba(0,82,204,.1);
+  --accent-glow:rgba(0,82,204,.2);
+  --accent-fg:#fff;
+  --accent2:#d63030;
+  --accent3:#1a8a00;
+  --text:#1a1d35;
+  --text2:#5a5f80;
+  --text3:#aab0cc;
+}
+
+/* ─────────────────────────────────────────
+   RESET & BASE
+───────────────────────────────────────── */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg0);
+  color:var(--text);
+  max-width:430px;margin:0 auto;
+  min-height:100vh;
+  overflow-x:hidden;
+  transition:background .4s,color .4s;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* Ambient background blobs */
+body.night .blob{
+  position:fixed;border-radius:50%;
+  filter:blur(80px);pointer-events:none;z-index:0;
+  animation:blobFloat 8s ease-in-out infinite alternate;
+}
+.blob-1{width:300px;height:300px;top:-60px;right:-80px;background:rgba(0,229,255,.06);animation-delay:0s}
+.blob-2{width:250px;height:250px;bottom:100px;left:-60px;background:rgba(105,255,71,.04);animation-delay:3s}
+.blob-3{width:200px;height:200px;top:50%;right:-40px;background:rgba(255,107,107,.04);animation-delay:5s}
+@keyframes blobFloat{
+  from{transform:translateY(0) scale(1)}
+  to{transform:translateY(-30px) scale(1.08)}
+}
+
+/* ─────────────────────────────────────────
+   HEADER
+───────────────────────────────────────── */
+.header{
+  position:sticky;top:0;z-index:80;
+  background:rgba(6,6,8,.85);
+  border-bottom:1px solid var(--border);
+  padding:env(safe-area-inset-top) 0 0;
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+}
+body.day .header{background:rgba(238,240,248,.88)}
+.hdr-inner{padding:12px 16px 10px}
+.hdr-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+
+/* Brand */
+.brand{display:flex;align-items:center;gap:11px}
+.brand-logo{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--accent),rgba(0,229,255,.4));
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+  box-shadow:0 0 20px var(--accent-glow);
+}
+body.day .brand-logo{box-shadow:0 4px 12px var(--accent-glow)}
+.brand-name{
+  font-family:var(--mono);font-size:16px;font-weight:700;
+  color:var(--text);letter-spacing:.5px;line-height:1;
+}
+.brand-ver{
+  font-size:8px;color:var(--accent);letter-spacing:3px;
+  text-transform:uppercase;margin-top:3px;font-weight:600;
+}
+
+/* Header right */
+.hdr-right{display:flex;align-items:center;gap:7px}
+.date-block{
+  text-align:right;
+  background:var(--glass2);
+  border:1px solid var(--border);
+  border-radius:10px;padding:5px 10px;
+  backdrop-filter:blur(10px);
+}
+.date-main{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--text);line-height:1.3}
+.date-sub{font-size:9px;color:var(--text3);margin-top:1px;font-family:var(--mono)}
+.hdr-icon-btn{
+  width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+  background:var(--glass2);border:1px solid var(--border);
+  border-radius:10px;cursor:pointer;font-size:17px;
+  transition:all .2s;flex-shrink:0;
+  backdrop-filter:blur(10px);
+}
+.hdr-icon-btn:active{transform:scale(.88);background:var(--glass3)}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.stat{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:10px;padding:8px 5px;text-align:center;
+  position:relative;overflow:hidden;
+  transition:background .2s,transform .2s;
+}
+.stat::before{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1.5px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+  opacity:.5;
+}
+.stat-val{
+  font-family:var(--mono);font-size:18px;font-weight:700;
+  color:var(--accent);line-height:1;
+  text-shadow:0 0 12px var(--accent-glow);
+}
+body.day .stat-val{text-shadow:none}
+.stat-lbl{font-size:8px;color:var(--text3);margin-top:2px;letter-spacing:.8px;text-transform:uppercase}
+
+/* ─────────────────────────────────────────
+   MAIN
+───────────────────────────────────────── */
+.main{padding:14px 14px 96px;position:relative;z-index:1}
+.sec-label{
+  font-size:9px;color:var(--text3);letter-spacing:3px;
+  text-transform:uppercase;margin:16px 0 8px;font-weight:600;
+  display:flex;align-items:center;gap:8px;
+}
+.sec-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider{height:1px;background:var(--border);margin:14px 0}
+
+/* ─────────────────────────────────────────
+   SIZE PANEL (floating card)
+───────────────────────────────────────── */
+.size-panel{
+  background:var(--glass2);
+  border:1px solid var(--border2);
+  border-radius:var(--r);padding:14px;
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  box-shadow:0 8px 32px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.06);
+}
+body.day .size-panel{box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.size-input-row{display:flex;gap:8px;margin-bottom:12px}
+.size-input-row input{flex:1;margin:0}
+
+/* Chip groups */
+.chip-section{margin-bottom:10px}
+.chip-section:last-child{margin-bottom:0}
+.chip-section-label{
+  font-size:8px;color:var(--text3);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:6px;font-weight:600;
+}
+.chips-row{display:flex;gap:5px;flex-wrap:wrap}
+.chip{
+  padding:6px 12px;font-size:11px;font-weight:600;
+  border-radius:var(--rx);cursor:pointer;
+  transition:all .15s;user-select:none;white-space:nowrap;
+  font-family:var(--mono);letter-spacing:.3px;
+}
+.chip:active{transform:scale(.9)}
+.chip-foot{
+  background:var(--accent-dim);
+  border:1px solid rgba(0,229,255,.3);
+  color:var(--accent);
+}
+.chip-foot:active{background:rgba(0,229,255,.25);box-shadow:0 0 10px var(--accent-glow)}
+body.day .chip-foot{background:rgba(0,82,204,.08);border-color:rgba(0,82,204,.25);color:var(--accent)}
+.chip-std{
+  background:var(--glass2);border:1px solid var(--border2);color:var(--text2);
+}
+.chip-std:active{background:var(--glass3)}
+
+/* ─────────────────────────────────────────
+   INPUTS & SELECTS
+───────────────────────────────────────── */
+input,select{
+  width:100%;padding:12px 14px;
+  background:var(--glass2);
+  border:1px solid var(--border2);
+  border-radius:var(--rs);
+  color:var(--text);
+  font-family:var(--sans);font-size:14px;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s,background .2s;
+  -webkit-appearance:none;
+  backdrop-filter:blur(10px);
+}
+input::placeholder{color:var(--text3)}
+input:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-dim),0 0 20px var(--accent-dim);
+  background:var(--glass3);
+}
+body.day input:focus{box-shadow:0 0 0 3px var(--accent-dim)}
+select:focus{border-color:var(--accent)}
+select option{background:var(--bg2);color:var(--text)}
+
+/* ─────────────────────────────────────────
+   BUTTONS
+───────────────────────────────────────── */
+.btn{
+  padding:12px 16px;border:none;border-radius:var(--rs);
+  font-family:var(--sans);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .15s;white-space:nowrap;
+  letter-spacing:.2px;
+}
+.btn:active{transform:scale(.95);opacity:.85}
+.btn-accent{
+  background:var(--accent);color:var(--accent-fg);
+  box-shadow:0 4px 20px var(--accent-glow);
+}
+.btn-accent:active{box-shadow:0 2px 10px var(--accent-glow)}
+.btn-ghost{
+  background:var(--glass2);color:var(--text2);
+  border:1px solid var(--border2);
+  backdrop-filter:blur(10px);
+}
+.btn-ghost:active{background:var(--glass3)}
+.btn-danger{background:rgba(255,107,107,.12);color:var(--accent2);border:1px solid rgba(255,107,107,.2)}
+.btn-success{background:rgba(105,255,71,.08);color:var(--accent3);border:1px solid rgba(105,255,71,.2)}
+.btn-info{background:rgba(0,229,255,.08);color:var(--accent);border:1px solid rgba(0,229,255,.2)}
+.btn-row{display:flex;gap:7px}
+.btn-row .btn{flex:1}
+
+/* ─────────────────────────────────────────
+   TABS — horizontal scroll pill row
+───────────────────────────────────────── */
+.tabs-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:4px;margin-bottom:10px}
+.tabs-wrap::-webkit-scrollbar{display:none}
+.tabs{display:flex;gap:6px;min-width:max-content}
+.tab{
+  padding:7px 18px;font-size:12px;font-weight:600;
+  border-radius:var(--rx);
+  border:1px solid var(--border2);
+  background:var(--glass);
+  color:var(--text2);
+  cursor:pointer;white-space:nowrap;
+  transition:all .2s;
+  backdrop-filter:blur(8px);
+}
+.tab.active{
+  background:var(--accent);color:var(--accent-fg);
+  border-color:transparent;font-weight:700;
+  box-shadow:0 4px 16px var(--accent-glow);
+}
+body.day .tab.active{box-shadow:0 3px 12px var(--accent-glow)}
+
+/* ─────────────────────────────────────────
+   PRODUCT TOOLBAR
+───────────────────────────────────────── */
+.prod-toolbar{display:flex;gap:6px;margin-bottom:8px}
+.prod-toolbar .btn{flex:1;padding:9px 6px;font-size:11px}
+.search-row{display:flex;gap:6px;margin-bottom:8px}
+.search-row input{flex:1;margin:0}
+.search-row select{flex:0 0 105px;margin:0;font-size:12px}
+
+/* ─────────────────────────────────────────
+   PRODUCT GRID — 4 col
+───────────────────────────────────────── */
+#products{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.product{
+  padding:13px 4px 10px;font-size:11px;text-align:center;
+  border-radius:12px;
+  background:var(--glass);border:1.5px solid var(--border);
+  position:relative;touch-action:pan-y;
+  cursor:pointer;word-break:break-all;line-height:1.4;
+  user-select:none;color:var(--text2);font-weight:500;
+  transition:transform .15s,background .15s,border-color .2s,box-shadow .2s;
+  backdrop-filter:blur(8px);
+}
+.product.active{
+  background:var(--accent-dim);
+  border-color:var(--accent);color:var(--accent);
+  font-weight:700;
+  box-shadow:0 0 18px var(--accent-glow),inset 0 0 12px rgba(0,229,255,.06);
+  transform:scale(1.02);
+}
+body.day .product.active{transform:scale(1.02);box-shadow:0 4px 14px var(--accent-glow)}
+.product .del-x{
+  position:absolute;top:3px;right:4px;
+  font-size:9px;color:var(--text3);
+  cursor:pointer;padding:3px;line-height:1;
+  opacity:0;transition:opacity .2s;
+  border-radius:4px;
+}
+.product:active .del-x,.product-show-del .del-x{opacity:1}
+.product .use-badge{
+  position:absolute;bottom:2px;right:4px;
+  font-size:8px;color:var(--accent);
+  font-family:var(--mono);font-weight:600;
+}
+.prod-name{padding:0 10px;line-height:1.4}
+.empty-prod{text-align:center;color:var(--text3);font-size:12px;padding:28px 0;grid-column:1/-1}
+
+/* ─────────────────────────────────────────
+   ORDER CARDS — glassmorphism
+───────────────────────────────────────── */
+.order-card{
+  background:var(--glass2);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  margin-bottom:10px;overflow:hidden;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  transition:box-shadow .2s,transform .2s;
+  animation:cardIn .25s ease;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.order-card:active{transform:scale(.99)}
+.order-hdr{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:12px 14px;
+  background:var(--glass);
+  border-bottom:1px solid var(--border);
+}
+.order-left{flex:1;min-width:0}
+.order-label{
+  font-family:var(--mono);font-size:14px;font-weight:700;
+  color:var(--accent);line-height:1.3;word-break:break-all;
+  cursor:pointer;
+  text-shadow:0 0 12px var(--accent-glow);
+}
+body.day .order-label{text-shadow:none}
+.order-ts{font-size:9px;color:var(--text3);margin-top:3px;font-family:var(--mono);letter-spacing:.3px}
+.order-badge{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--accent-dim);border:1px solid rgba(0,229,255,.2);
+  color:var(--accent);font-family:var(--mono);
+  font-size:10px;font-weight:700;
+  border-radius:6px;padding:2px 8px;margin-top:4px;
+}
+body.day .order-badge{background:var(--accent-dim);border-color:var(--border2)}
+.order-actions{display:flex;gap:2px;margin-left:8px;flex-shrink:0}
+.act-btn{
+  background:none;border:none;color:var(--text3);
+  font-size:15px;cursor:pointer;padding:6px 7px;
+  border-radius:8px;transition:all .15s;
+}
+.act-btn:active{background:var(--glass3);transform:scale(.88)}
+.order-items{padding:2px 0}
+.order-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:9px 14px;font-size:13px;color:var(--text2);
+  border-bottom:1px solid var(--border);
+  transition:background .15s;
+}
+.order-item:last-child{border:none}
+.order-item:active{background:var(--glass)}
+.item-del{
+  font-size:11px;color:var(--text3);cursor:pointer;
+  padding:4px 8px;border-radius:6px;
+  transition:all .15s;margin-left:6px;flex-shrink:0;
+}
+.item-del:active{background:rgba(255,107,107,.15);color:var(--accent2)}
+
+/* ─────────────────────────────────────────
+   MANAGE COLLAPSIBLE
+───────────────────────────────────────── */
+.collapse-hdr{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 14px;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:var(--rs);cursor:pointer;margin-bottom:4px;
+  transition:background .2s;backdrop-filter:blur(10px);
+}
+.collapse-hdr:active{background:var(--glass2)}
+.collapse-title{font-size:12px;font-weight:600;color:var(--text2)}
+.collapse-arr{font-size:11px;color:var(--text3);transition:transform .25s}
+.collapse-arr.open{transform:rotate(180deg)}
+.collapse-body{display:none;padding:10px 0 0}
+.collapse-body.open{display:block}
+
+/* ─────────────────────────────────────────
+   BOTTOM NAV — floating pill
+───────────────────────────────────────── */
+.bottom-nav{
+  position:fixed;
+  bottom:16px;
+  left:50%;transform:translateX(-50%);
+  width:calc(100% - 28px);max-width:400px;
+  z-index:80;
+  background:rgba(13,13,18,.92);
+  border:1px solid var(--border3);
+  border-radius:20px;
+  padding:8px 10px;
+  display:grid;grid-template-columns:repeat(4,1fr);gap:4px;
+  backdrop-filter:blur(30px) saturate(200%);
+  -webkit-backdrop-filter:blur(30px) saturate(200%);
+  box-shadow:0 8px 40px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04) inset;
+}
+body.day .bottom-nav{
+  background:rgba(255,255,255,.9);
+  box-shadow:0 8px 40px rgba(0,0,0,.12),0 0 0 1px rgba(0,0,0,.04) inset;
+}
+.nav-btn{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  padding:8px 4px;border-radius:14px;border:none;
+  background:transparent;
+  font-family:var(--sans);font-size:10px;font-weight:600;
+  cursor:pointer;transition:all .18s;color:var(--text3);
+}
+.nav-btn:active{transform:scale(.88)}
+.nav-btn .n-icon{font-size:19px;line-height:1}
+.nav-undo:active{background:rgba(68,136,255,.12);color:#4488ff}
+.nav-copy:active{background:rgba(105,255,71,.1);color:var(--accent3)}
+.nav-clear:active{background:rgba(255,107,107,.1);color:var(--accent2)}
+.nav-lock:active{background:var(--glass2);color:var(--text)}
+
+/* ─────────────────────────────────────────
+   LOCK SCREEN
+───────────────────────────────────────── */
+#lockScreen{
+  display:none;position:fixed;inset:0;
+  background:var(--bg0);z-index:999;
+  flex-direction:column;align-items:center;justify-content:center;gap:0;
+}
+#lockScreen.show{display:flex}
+#lockScreen::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 50% at 50% 30%,rgba(0,229,255,.06),transparent 70%);
+  pointer-events:none;
+}
+.lock-logo{font-size:48px;margin-bottom:12px;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.lock-title{font-family:var(--mono);font-size:12px;color:var(--text3);letter-spacing:4px;text-transform:uppercase;margin-bottom:28px}
+.lock-dots{display:flex;gap:14px;margin-bottom:36px}
+.lock-dot{
+  width:12px;height:12px;border-radius:50%;
+  background:var(--bg4);border:1.5px solid var(--border3);
+  transition:all .2s;
+}
+.lock-dot.on{
+  background:var(--accent);border-color:var(--accent);
+  box-shadow:0 0 12px var(--accent-glow),0 0 24px rgba(0,229,255,.2);
+}
+.calc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;width:230px}
+.calc-key{
+  padding:17px;text-align:center;
+  background:var(--glass2);border:1px solid var(--border2);
+  border-radius:13px;font-size:20px;
+  font-family:var(--mono);color:var(--text);
+  cursor:pointer;user-select:none;
+  transition:all .15s;
+  backdrop-filter:blur(10px);
+}
+.calc-key:active{background:var(--glass3);transform:scale(.9);border-color:var(--border3)}
+.calc-key.sp{font-size:15px;color:var(--text2)}
+
+/* ─────────────────────────────────────────
+   MODAL
+───────────────────────────────────────── */
+#modal{
+  display:none;position:fixed;inset:0;
+  background:rgba(0,0,0,.8);z-index:200;
+  align-items:flex-end;justify-content:center;
+  backdrop-filter:blur(6px);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+#modal.show{display:flex}
+.modal-box{
+  background:var(--bg2);
+  border:1px solid var(--border3);
+  border-radius:24px 24px 20px 20px;
+  padding:24px 20px 28px;
+  width:100%;max-width:430px;
+  box-shadow:0 -20px 60px rgba(0,0,0,.5);
+  animation:slideUp .25s cubic-bezier(.16,1,.3,1);
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.modal-handle{width:36px;height:4px;background:var(--border3);border-radius:2px;margin:0 auto 18px}
+.modal-box h3{font-size:16px;font-weight:700;margin-bottom:14px;color:var(--text)}
+.modal-box input{margin-bottom:12px}
+.modal-btns{display:flex;gap:9px}
+.modal-btns .btn{flex:1;padding:13px}
+
+/* ─────────────────────────────────────────
+   TOAST
+───────────────────────────────────────── */
+#toast{
+  position:fixed;bottom:90px;left:50%;
+  transform:translateX(-50%) translateY(12px);
+  background:var(--bg3);color:var(--text);
+  border:1px solid var(--border3);
+  padding:10px 20px;border-radius:var(--rx);
+  font-size:13px;font-weight:600;
+  opacity:0;transition:opacity .25s,transform .25s;
+  pointer-events:none;z-index:500;white-space:nowrap;
+  box-shadow:0 8px 32px rgba(0,0,0,.4);
+  backdrop-filter:blur(20px);
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ─────────────────────────────────────────
+   EMPTY OUTPUT
+───────────────────────────────────────── */
+.empty-out{
+  text-align:center;color:var(--text3);
+  padding:40px 0;font-size:13px;line-height:2;
+}
+.empty-out .big{font-size:36px;display:block;margin-bottom:8px;opacity:.5}
+</style>
+</head>
+<body class="night">
+
+<!-- ambient blobs -->
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="blob blob-3"></div>
+
+<!-- LOCK -->
+<div id="lockScreen">
+  <div class="lock-logo">📦</div>
+  <div class="lock-title">Packing Pro</div>
+  <div class="lock-dots" id="lockDots">
+    <div class="lock-dot"></div><div class="lock-dot"></div>
+    <div class="lock-dot"></div><div class="lock-dot"></div><div class="lock-dot"></div>
+  </div>
+  <div class="calc-grid" id="calcGrid"></div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- MODAL (bottom sheet) -->
+<div id="modal">
+  <div class="modal-box">
+    <div class="modal-handle"></div>
+    <h3 id="modal-title">แก้ไข</h3>
+    <input id="modal-input" placeholder="">
+    <div class="modal-btns">
+      <button class="btn btn-accent" onclick="modalConfirm()">ยืนยัน</button>
+      <button class="btn btn-ghost" onclick="closeModal()">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     HEADER
+══════════════════════════════════════ -->
+<div class="header">
+  <div class="hdr-inner">
+    <div class="hdr-top">
+      <div class="brand">
+        <div class="brand-logo">📦</div>
+        <div>
+          <div class="brand-name">PACKING PRO</div>
+          <div class="brand-ver">v6 · warehouse</div>
+        </div>
+      </div>
+      <div class="hdr-right">
+        <div class="date-block">
+          <div class="date-main" id="hdr-d1">--/--/--</div>
+          <div class="date-sub" id="hdr-d2">--:--</div>
+        </div>
+        <div class="hdr-icon-btn" onclick="toggleTheme()" id="theme-btn">☀️</div>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-val" id="s-ord">0</div><div class="stat-lbl">ออเดอร์</div></div>
+      <div class="stat"><div class="stat-val" id="s-itm">0</div><div class="stat-lbl">รายการ</div></div>
+      <div class="stat"><div class="stat-val" id="s-sel">0</div><div class="stat-lbl">เลือก</div></div>
+      <div class="stat"><div class="stat-val" id="s-cat">0</div><div class="stat-lbl">หมวด</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     MAIN
+══════════════════════════════════════ -->
+<div class="main">
+
+  <!-- SIZE PANEL -->
+  <div class="size-panel">
+    <div class="size-input-row">
+      <input id="sizes" placeholder="ขนาด / รหัสออเดอร์..." onkeypress="if(event.key==='Enter')addItems()">
+      <button class="btn btn-accent" onclick="addItems()" style="padding:12px 16px;font-size:14px">✅</button>
+    </div>
+    <div class="chip-section">
+      <div class="chip-section-label">ฟุต — แตะเพื่อเลือก</div>
+      <div class="chips-row">
+        <div class="chip chip-foot" onclick="setSize('3.5 ฟุต')">3.5″</div>
+        <div class="chip chip-foot" onclick="setSize('4 ฟุต')">4″</div>
+        <div class="chip chip-foot" onclick="setSize('5 ฟุต')">5″</div>
+        <div class="chip chip-foot" onclick="setSize('6 ฟุต')">6″</div>
+        <div class="chip chip-foot" onclick="setSize('3.5/5 ฟุต')">3.5/5″</div>
+        <div class="chip chip-foot" onclick="setSize('5/6 ฟุต')">5/6″</div>
+      </div>
+    </div>
+    <div class="chip-section">
+      <div class="chip-section-label">ไซส์เสื้อ</div>
+      <div class="chips-row">
+        <div class="chip chip-std" onclick="setSize('S')">S</div>
+        <div class="chip chip-std" onclick="setSize('M')">M</div>
+        <div class="chip chip-std" onclick="setSize('L')">L</div>
+        <div class="chip chip-std" onclick="setSize('XL')">XL</div>
+        <div class="chip chip-std" onclick="setSize('2XL')">2XL</div>
+        <div class="chip chip-std" onclick="setSize('3XL')">3XL</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="sec-label">หมวดสินค้า</div>
+  <div class="tabs-wrap"><div class="tabs" id="tabs"></div></div>
+
+  <!-- SEARCH -->
+  <div class="search-row">
+    <input id="srch" placeholder="🔍 ค้นหา..." oninput="renderProds()">
+    <select id="srt" onchange="renderProds()">
+      <option value="default">เรียงเดิม</option>
+      <option value="alpha">A–Z</option>
+      <option value="sel">เลือกก่อน</option>
+    </select>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="prod-toolbar">
+    <button class="btn btn-info" onclick="selAll()">☑ ทั้งหมด</button>
+    <button class="btn btn-ghost" onclick="deselAll()">☐ ยกเลิก</button>
+    <button class="btn btn-ghost" onclick="invertSel()">↔ กลับ</button>
+  </div>
+
+  <div id="products"></div>
+
+  <div class="divider"></div>
+
+  <!-- MANAGE -->
+  <div class="collapse-hdr" onclick="togCollapse('mgmt','marr')">
+    <span class="collapse-title">⚙️ จัดการสินค้า &amp; หมวด</span>
+    <span class="collapse-arr" id="marr">▼</span>
+  </div>
+  <div class="collapse-body" id="mgmt">
+    <div class="sec-label" style="margin-top:8px">หมวดใหม่</div>
+    <div class="btn-row" style="gap:7px">
+      <input id="ncat" placeholder="ชื่อหมวด" onkeypress="if(event.key==='Enter')addCat()" style="flex:1;margin:0">
+      <button class="btn btn-ghost" onclick="addCat()" style="padding:12px 14px">➕</button>
+      <button class="btn btn-danger" onclick="delCurCat()" style="padding:12px 14px">🗑</button>
+    </div>
+    <div class="sec-label" style="margin-top:12px">สินค้าใหม่</div>
+    <input id="nprod" placeholder="ชื่อสินค้า" onkeypress="if(event.key==='Enter')addProd()">
+    <div class="btn-row" style="margin-top:7px">
+      <select id="catsel" style="flex:1;margin:0"></select>
+      <button class="btn btn-ghost" onclick="addProd()" style="padding:12px 14px">➕</button>
+    </div>
+    <div class="btn-row" style="margin-top:10px">
+      <button class="btn btn-info" onclick="expData()">💾 Export</button>
+      <button class="btn btn-ghost" onclick="impData()">📂 Import</button>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- OUTPUT -->
+  <div class="sec-label">รายการแพ็กสินค้า</div>
+  <div id="output"></div>
+
+</div>
+
+<!-- BOTTOM NAV (floating pill) -->
+<div class="bottom-nav">
+  <button class="nav-btn nav-undo" id="undoBtn">
+    <span class="n-icon">↩</span>Undo
+  </button>
+  <button class="nav-btn nav-copy" onclick="copyAll()">
+    <span class="n-icon">📋</span>Copy
+  </button>
+  <button class="nav-btn nav-clear" onclick="clearAll()">
+    <span class="n-icon">🗑</span>ล้าง
+  </button>
+  <button class="nav-btn nav-lock" onclick="lockApp()">
+    <span class="n-icon">🔒</span>ล็อก
+  </button>
+</div>
+
+<!-- ══════════════════════════════════════
+     SCRIPT
+══════════════════════════════════════ -->
+<script>
+// ── storage ──────────────────────────────
+const LS=(k,d)=>{try{const v=JSON.parse(localStorage.getItem(k));return v??d}catch{return d}};
+const SS=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{toast('❌ Storage เต็ม')}};
+
+// ── state ─────────────────────────────────
+let P  = LS('pp6_p',{'ลายใหม่':['ทอยสตอรี่','มิกกี้'],'ลายเก่า':['ดำ','บอย']});
+let D  = LS('pp6_d',{});
+let U  = LS('pp6_u',[]);
+if(!Array.isArray(U))U=[];
+let tab    = Object.keys(P)[0]||'';
+let sel    = new Set();
+let locked = localStorage.getItem('pp6_lock')==='true';
+let theme  = localStorage.getItem('pp6_theme')||'night';
+
+// ── dom ───────────────────────────────────
+const lockEl  = document.getElementById('lockScreen');
+const calcEl  = document.getElementById('calcGrid');
+const toastEl = document.getElementById('toast');
+const modalEl = document.getElementById('modal');
+const tabsEl  = document.getElementById('tabs');
+const prodsEl = document.getElementById('products');
+const outEl   = document.getElementById('output');
+const catSel  = document.getElementById('catsel');
+const sizIn   = document.getElementById('sizes');
+const srchIn  = document.getElementById('srch');
+
+// ── theme ─────────────────────────────────
+const applyTheme=t=>{
+  document.body.className=t;theme=t;SS('pp6_theme',t);
+  document.getElementById('theme-btn').textContent=t==='night'?'☀️':'🌙';
+  // hide/show blobs
+  document.querySelectorAll('.blob').forEach(b=>b.style.display=t==='night'?'block':'none');
+};
+const toggleTheme=()=>applyTheme(theme==='night'?'day':'night');
+
+// ── toast ─────────────────────────────────
+let tT;
+const toast=(m,d=1800)=>{
+  toastEl.textContent=m;toastEl.classList.add('show');
+  clearTimeout(tT);tT=setTimeout(()=>toastEl.classList.remove('show'),d);
+};
+
+// ── clock ─────────────────────────────────
+const pad=n=>String(n).padStart(2,'0');
+const todayStr=()=>{const n=new Date();return `${pad(n.getDate())}/${pad(n.getMonth()+1)}/${String(n.getFullYear()+543).slice(-2)}`;};
+const nowTime=()=>{const n=new Date();return `${pad(n.getHours())}:${pad(n.getMinutes())}`;};
+const tick=()=>{
+  const n=new Date();
+  const days=['อา','จ','อ','พ','พฤ','ศ','ส'];
+  const mo=['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
+  document.getElementById('hdr-d1').textContent=`${days[n.getDay()]} ${n.getDate()} ${mo[n.getMonth()]} ${n.getFullYear()+543}`;
+  document.getElementById('hdr-d2').textContent=`${pad(n.getHours())}:${pad(n.getMinutes())}`;
+};
+
+// ── lock ──────────────────────────────────
+let lc='';
+const initLock=()=>{
+  document.querySelectorAll('.header,.main,.bottom-nav').forEach(e=>e.style.display=locked?'none':'');
+  lockEl.classList.toggle('show',locked);
+  if(locked)buildCalc();
+};
+const buildCalc=()=>{
+  calcEl.innerHTML='';
+  ['1','2','3','4','5','6','7','8','9','⌫','0','↵'].forEach(k=>{
+    const d=document.createElement('div');
+    d.className='calc-key'+(['⌫','↵'].includes(k)?' sp':'');
+    d.textContent=k;
+    d.addEventListener('click',()=>{
+      if(k==='⌫')lc=lc.slice(0,-1);else if(k!=='↵')lc+=k;
+      document.querySelectorAll('.lock-dot').forEach((x,i)=>x.classList.toggle('on',i<lc.length));
+      if(lc==='98994'){
+        locked=false;SS('pp6_lock',false);lc='';
+        lockEl.classList.remove('show');
+        document.querySelectorAll('.header,.main,.bottom-nav').forEach(e=>e.style.display='');
+        toast('🔓 ปลดล็อกแล้ว');
+      }
+      if(lc.length>5)lc='';
+    });
+    calcEl.appendChild(d);
+  });
+};
+const lockApp=()=>{
+  locked=true;SS('pp6_lock',true);lc='';
+  document.querySelectorAll('.lock-dot').forEach(d=>d.classList.remove('on'));
+  document.querySelectorAll('.header,.main,.bottom-nav').forEach(e=>e.style.display='none');
+  lockEl.classList.add('show');buildCalc();
+};
+
+// ── stats ─────────────────────────────────
+const updStats=()=>{
+  document.getElementById('s-ord').textContent=Object.keys(D).length;
+  document.getElementById('s-itm').textContent=Object.values(D).reduce((s,a)=>s+a.length,0);
+  document.getElementById('s-sel').textContent=sel.size;
+  document.getElementById('s-cat').textContent=Object.keys(P).length;
+};
+
+// ── save ──────────────────────────────────
+const saveD=()=>{SS('pp6_d',D);SS('pp6_u',U);};
+const saveP=()=>SS('pp6_p',P);
+
+// ── size chips ────────────────────────────
+const setSize=v=>{sizIn.value=v;sizIn.focus();toast('📐 '+v);};
+
+// ── key builder ───────────────────────────
+const buildKey=r=>`${r.trim()} ${todayStr()} ${nowTime()}`;
+const parseKey=k=>{
+  const m=k.match(/^(.*?)\s+(\d{2}\/\d{2}\/\d{2})\s+(\d{2}:\d{2})$/);
+  return m?{label:m[1].trim(),date:m[2],time:m[3]}:{label:k,date:'',time:''};
+};
+
+// ── categories ────────────────────────────
+const addCat=()=>{
+  const n=document.getElementById('ncat').value.trim();
+  if(!n)return toast('⚠️ ระบุชื่อหมวด');
+  if(P[n])return toast('⚠️ มีหมวดนี้แล้ว');
+  P[n]=[];saveP();document.getElementById('ncat').value='';
+  tab=n;renderAll();toast('✅ เพิ่มหมวด '+n);
+};
+const delCurCat=()=>{
+  if(Object.keys(P).length<=1)return toast('⚠️ ต้องมีอย่างน้อย 1 หมวด');
+  if(!confirm('ลบหมวด "'+tab+'" ทั้งหมด?'))return;
+  delete P[tab];tab=Object.keys(P)[0];sel.clear();saveP();renderAll();toast('🗑 ลบหมวดแล้ว');
+};
+const updCatSel=()=>{
+  catSel.innerHTML='';
+  Object.keys(P).forEach(k=>{const o=document.createElement('option');o.value=k;o.textContent=k;catSel.appendChild(o);});
+  if(P[tab])catSel.value=tab;
+};
+
+// ── products ─────────────────────────────
+const addProd=()=>{
+  const n=document.getElementById('nprod').value.trim(),c=catSel.value;
+  if(!n)return toast('⚠️ ระบุชื่อสินค้า');
+  if(!P[c])return toast('⚠️ เลือกหมวดก่อน');
+  if(P[c].includes(n))return toast('⚠️ มีสินค้านี้แล้ว');
+  P[c].push(n);saveP();document.getElementById('nprod').value='';
+  tab=c;renderAll();toast('✅ เพิ่ม '+n);
+};
+const getList=()=>{
+  if(!P[tab])return[];
+  const k=srchIn.value.trim().toLowerCase();
+  const s=document.getElementById('srt').value;
+  let l=P[tab].filter(p=>p.toLowerCase().includes(k));
+  if(s==='alpha')l=[...l].sort((a,b)=>a.localeCompare(b,'th'));
+  if(s==='sel')l=[...l].sort((a,b)=>(sel.has(b)?1:0)-(sel.has(a)?1:0));
+  return l;
+};
+const selAll=()=>{getList().forEach(p=>sel.add(p));renderProds();toast('☑ เลือกทั้งหมด');};
+const deselAll=()=>{sel.clear();renderProds();toast('☐ ยกเลิกทั้งหมด');};
+const invertSel=()=>{getList().forEach(p=>sel.has(p)?sel.delete(p):sel.add(p));renderProds();toast('↔ กลับการเลือก');};
+const togProd=p=>{sel.has(p)?sel.delete(p):sel.add(p);renderProds();};
+const delProd=p=>{
+  if(!confirm('ลบ "'+p+'"?'))return;
+  const i=P[tab].indexOf(p);if(i>-1)P[tab].splice(i,1);
+  sel.delete(p);Object.keys(D).forEach(k=>{D[k]=D[k].filter(x=>x!==p)});
+  saveP();saveD();renderAll();toast('🗑 ลบ '+p);
+};
+const renameProd=p=>{
+  openModal('แก้ไขชื่อสินค้า',p,nn=>{
+    if(!nn||nn===p)return;
+    if(P[tab].includes(nn))return toast('⚠️ มีชื่อนี้แล้ว');
+    const i=P[tab].indexOf(p);if(i>-1)P[tab][i]=nn;
+    Object.keys(D).forEach(k=>{D[k]=D[k].map(x=>x===p?nn:x)});
+    if(sel.has(p)){sel.delete(p);sel.add(nn);}
+    saveP();saveD();renderAll();toast('✏️ เปลี่ยนชื่อแล้ว');
+  });
+};
+const renderProds=()=>{
+  prodsEl.innerHTML='';
+  const list=getList();
+  if(!list.length){prodsEl.innerHTML='<div class="empty-prod">ไม่พบสินค้า</div>';updStats();return;}
+  list.forEach(p=>{
+    const d=document.createElement('div');
+    d.className='product'+(sel.has(p)?' active':'');
+    let used=0;Object.values(D).forEach(a=>{if(a.includes(p))used++;});
+    d.innerHTML=`<span class="del-x">✕</span><div class="prod-name">${p}</div>${used?`<span class="use-badge">${used}×</span>`:''}`;
+    d.querySelector('.del-x').addEventListener('click',e=>{e.stopPropagation();delProd(p);});
+    d.addEventListener('click',()=>togProd(p));
+    d.addEventListener('dblclick',e=>{e.preventDefault();renameProd(p);});
+    let sx=0,cx=0;
+    d.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;cx=sx;},{passive:true});
+    d.addEventListener('touchmove',e=>{cx=e.touches[0].clientX;const dx=cx-sx;if(dx<0)d.style.transform=`translateX(${Math.max(dx,-100)}px)`;},{passive:true});
+    d.addEventListener('touchend',()=>{const dx=cx-sx;d.style.transform='';if(dx<-70)delProd(p);});
+    prodsEl.appendChild(d);
+  });
+  updStats();
+};
+
+// ── tabs ──────────────────────────────────
+const renderTabs=()=>{
+  tabsEl.innerHTML='';
+  Object.keys(P).forEach(cat=>{
+    const d=document.createElement('div');
+    d.className='tab'+(cat===tab?' active':'');
+    d.textContent=cat;
+    d.addEventListener('click',()=>{tab=cat;sel.clear();srchIn.value='';renderTabs();renderProds();updCatSel();});
+    tabsEl.appendChild(d);
+  });
+};
+
+// ── add items ─────────────────────────────
+const addItems=()=>{
+  const raw=sizIn.value.trim();
+  if(!raw)return toast('⚠️ ระบุขนาด/รหัส');
+  if(!sel.size)return toast('⚠️ เลือกสินค้าก่อน');
+  const key=buildKey(raw);
+  U.push(JSON.stringify(D));if(U.length>30)U.shift();
+  if(!D[key])D[key]=[];
+  let added=0;sel.forEach(p=>{if(!D[key].includes(p)){D[key].push(p);added++;}});
+  sel.clear();sizIn.value='';
+  saveD();renderProds();renderOut();
+  toast(`✅ เพิ่ม ${added} รายการ → ${raw}`);
+};
+
+// ── undo ──────────────────────────────────
+const undoFn=()=>{
+  if(!U.length)return toast('⚠️ ไม่มีอะไร Undo');
+  D=JSON.parse(U.pop());saveD();renderOut();toast('↩ Undo แล้ว');
+};
+document.getElementById('undoBtn').addEventListener('click',undoFn);
+
+// ── clear ─────────────────────────────────
+const clearAll=()=>{
+  if(!Object.keys(D).length)return toast('⚠️ ไม่มีรายการ');
+  if(!confirm('ล้างรายการทั้งหมด?'))return;
+  U.push(JSON.stringify(D));D={};saveD();renderOut();toast('🗑 ล้างแล้ว');
+};
+
+// ── order actions ─────────────────────────
+const delOrder=key=>{
+  if(!confirm('ลบออเดอร์นี้?'))return;
+  U.push(JSON.stringify(D));delete D[key];saveD();renderOut();toast('🗑 ลบแล้ว');
+};
+const delItem=(key,item)=>{
+  U.push(JSON.stringify(D));
+  D[key]=D[key].filter(x=>x!==item);
+  if(!D[key].length)delete D[key];
+  saveD();renderOut();
+};
+const renameOrder=oldKey=>{
+  openModal('แก้ไขออเดอร์',oldKey,nk=>{
+    if(!nk||nk===oldKey)return;
+    if(D[nk])return toast('⚠️ มีออเดอร์นี้แล้ว');
+    D[nk]=D[oldKey];delete D[oldKey];saveD();renderOut();toast('✏️ เปลี่ยนชื่อแล้ว');
+  });
+};
+
+// ── copy ──────────────────────────────────
+const copyOrder=key=>{
+  const{label,date,time}=parseKey(key);
+  let t=`${label} ${date} ${time}\n`;D[key].forEach(i=>t+='- '+i+'\n');
+  navigator.clipboard.writeText(t.trim()).then(()=>toast('📋 คัดลอกแล้ว')).catch(()=>{});
+};
+const copyAll=()=>{
+  const keys=Object.keys(D);
+  if(!keys.length)return toast('⚠️ ไม่มีรายการ');
+  let t='';
+  keys.forEach(k=>{
+    const{label,date,time}=parseKey(k);
+    t+=`${label} ${date} ${time}\n`;
+    D[k].forEach(i=>t+='- '+i+'\n');t+='\n';
+  });
+  navigator.clipboard.writeText(t.trim())
+    .then(()=>toast('📋 คัดลอกทั้งหมดแล้ว'))
+    .catch(()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('📋 คัดลอกแล้ว');});
+};
+
+// ── render output ─────────────────────────
+const renderOut=()=>{
+  outEl.innerHTML='';
+  const keys=Object.keys(D);
+  if(!keys.length){
+    outEl.innerHTML='<div class="empty-out"><span class="big">📭</span>ยังไม่มีรายการ<br><small>เลือกสินค้า ใส่ขนาด แล้วกด ✅</small></div>';
+    updStats();return;
+  }
+  keys.forEach(key=>{
+    const{label,date,time}=parseKey(key);
+    const e=key.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    const card=document.createElement('div');card.className='order-card';
+    card.innerHTML=`
+      <div class="order-hdr">
+        <div class="order-left">
+          <div class="order-label" ondblclick="renameOrder('${e}')">${label}</div>
+          <div class="order-ts">${date?date+' · '+time:''}</div>
+          <div class="order-badge">📦 ${D[key].length} ชิ้น</div>
+        </div>
+        <div class="order-actions">
+          <button class="act-btn" onclick="copyOrder('${e}')">📋</button>
+          <button class="act-btn" onclick="delOrder('${e}')" style="color:var(--accent2)">✕</button>
+        </div>
+      </div>
+      <div class="order-items-wrap"></div>`;
+    const wrap=card.querySelector('.order-items-wrap');
+    D[key].forEach(item=>{
+      const row=document.createElement('div');row.className='order-item';
+      const ie=item.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      row.innerHTML=`<span>${item}</span><span class="item-del" onclick="delItem('${e}','${ie}')">✕</span>`;
+      wrap.appendChild(row);
+    });
+    outEl.appendChild(card);
+  });
+  updStats();
+};
+
+// ── export / import ───────────────────────
+const expData=()=>{
+  const blob=new Blob([JSON.stringify({products:P,data:D},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  const n=new Date();a.download=`packing_${n.getDate()}-${n.getMonth()+1}-${n.getFullYear()}.json`;
+  a.click();URL.revokeObjectURL(a.href);toast('💾 Export แล้ว');
+};
+const impData=()=>{
+  const inp=document.createElement('input');inp.type='file';inp.accept='.json';
+  inp.onchange=e=>{
+    const f=e.target.files[0];if(!f)return;
+    const r=new FileReader();r.onload=ev=>{
+      try{
+        const o=JSON.parse(ev.target.result);
+        if(o.products)P=o.products;if(o.data)D=o.data;
+        tab=Object.keys(P)[0]||'';saveP();saveD();renderAll();toast('✅ Import สำเร็จ');
+      }catch{toast('❌ ไฟล์ไม่ถูกต้อง');}
+    };r.readAsText(f);
+  };inp.click();
+};
+
+// ── collapse ──────────────────────────────
+const togCollapse=(bid,aid)=>{
+  const b=document.getElementById(bid),a=document.getElementById(aid);
+  b.classList.toggle('open');a.classList.toggle('open',b.classList.contains('open'));
+};
+
+// ── modal ─────────────────────────────────
+let mCb=null;
+const openModal=(title,def,cb)=>{
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-input').value=def||'';
+  mCb=cb;modalEl.classList.add('show');
+  setTimeout(()=>document.getElementById('modal-input').focus(),100);
+};
+const closeModal=()=>{modalEl.classList.remove('show');mCb=null;};
+const modalConfirm=()=>{const v=document.getElementById('modal-input').value.trim();if(mCb)mCb(v);closeModal();};
+document.getElementById('modal-input').addEventListener('keypress',e=>{if(e.key==='Enter')modalConfirm();});
+modalEl.addEventListener('click',e=>{if(e.target===modalEl)closeModal();});
+
+// ── render all ────────────────────────────
+const renderAll=()=>{renderTabs();updCatSel();renderProds();renderOut();};
+
+// ── init ──────────────────────────────────
+applyTheme(theme);
+tick();setInterval(tick,30000);
+initLock();
+renderAll();
+</script>
+</body>
+</html>
